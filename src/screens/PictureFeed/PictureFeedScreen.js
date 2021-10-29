@@ -1,7 +1,7 @@
 
 
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Image, Button } from 'react-native';
 import { Camera } from 'expo-camera';
 
 export default function App() {
@@ -42,31 +42,31 @@ export default function App() {
 
 
     return (
-        <View style={styles.cameraContainer}>
-            <Camera style={styles.fixedRatio} type={type} ratio={'1:1'} ref={ref => setCamera(ref)}>
-                <View style={styles.cameraContainer}>
-                </View>
-            </Camera>
-            <View style={styles.buttonContainer}>
-                <TouchableOpacity
-                    style={styles.button}
-                    onPress={() => {
-                        setType(
-                            type === Camera.Constants.Type.back
-                                ? Camera.Constants.Type.front
-                                : Camera.Constants.Type.back
-                        );
-                    }}>
-                    <Text style={styles.text}>Flip</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style={styles.button}
-                    onPress={handleTakePicturePress}>
-
-                    <Text style={styles.text}>Take Picture</Text>
-                </TouchableOpacity>
+        <View style={{ flex: 1 }}>
+            <View style={styles.cameraContainer}>
+                <Camera style={styles.fixedRatio} type={type} ratio={'1:1'} ref={ref => setCamera(ref)} />
             </View>
-            {image && <Image source={{ uri: image }} style={styles.cameraContainer} />}
+
+
+            <Button
+                style={styles.button}
+                onPress={() => {
+                    setType(
+                        type === Camera.Constants.Type.back
+                            ? Camera.Constants.Type.front
+                            : Camera.Constants.Type.back
+                    );
+                }}>
+                <Text style={styles.text}>Flip</Text>
+            </Button>
+            <Button
+                style={styles.button}
+                onPress={handleTakePicturePress}>
+
+                <Text style={styles.text}>Take Picture</Text>
+            </Button>
+
+            {image && <Image source={{ uri: image }} style={styles.savedImage} />}
         </View >
     );
 }
@@ -74,26 +74,32 @@ export default function App() {
 const styles = StyleSheet.create({
     cameraContainer: {
         flex: 1,
-        flexDirection: 'column',
+        flexDirection: 'row',
+
 
     },
     fixedRatio: {
         flex: 1,
         aspectRatio: 1
     },
-    button: {
 
-        height: 47,
+    savedImage: {
+        flex: 1,
+        aspectRatio: 1
+    }
+    // button: {
 
-        backgroundColor: '#788eec',
-        width: '100%',
-        alignItems: "center",
-        justifyContent: 'center'
-    },
-    buttonText: {
-        color: 'white',
-        fontSize: 16
-    },
+    //     height: 47,
+
+    //     backgroundColor: '#788eec',
+    //     width: '100%',
+    //     alignItems: "center",
+    //     justifyContent: 'center'
+    // },
+    // buttonText: {
+    //     color: 'white',
+    //     fontSize: 16
+    // },
     // buttonContainer: {
     //     display: 'flex',
     //     flexDirection: 'row'
