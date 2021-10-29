@@ -108,6 +108,9 @@ export default function HomeScreen(props) {
                     <Text style={styles.buttonText}>Log Out</Text>
                 </TouchableOpacity>
             </View>
+            <TouchableOpacity title="Feed" onPress={handleOnFeedPress} style={styles.button}>
+                <Text style={styles.buttonText}>Feed</Text>
+            </TouchableOpacity>
             {entities && (
                 <View style={styles.listContainer}>
                     <FlatList
@@ -118,8 +121,6 @@ export default function HomeScreen(props) {
                     />
                 </View>
             )}
-
-            <View><Button title="Feed" onPress={handleOnFeedPress}></Button></View>
 
         </View>
     )
