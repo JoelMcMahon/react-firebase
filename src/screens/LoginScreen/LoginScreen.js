@@ -4,7 +4,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import styles from './styles';
 import { firebase } from '../../firebase/config'
 
-export default function LoginScreen({ navigation, setUser }) {
+export default function LoginScreen({ navigation, setUser, user }) {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
 
@@ -12,7 +12,10 @@ export default function LoginScreen({ navigation, setUser }) {
         navigation.navigate('Registration')
     }
 
+
+
     const onLoginPress = () => {
+        console.log(firebase.auth().currentUser)
         firebase
             .auth()
             .signInWithEmailAndPassword(email, password)

@@ -1,10 +1,13 @@
 import 'react-native-gesture-handler';
+import { Button, Text, View } from 'react-native';
 import React, { useEffect, useState } from 'react'
-import { NavigationContainer } from '@react-navigation/native'
+import { NavigationContainer, useNavigation } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 import { LoginScreen, HomeScreen, RegistrationScreen } from './src/screens'
 import { decode, encode } from 'base-64'
 import { firebase } from './src/firebase/config'
+import PictureFeedScreen from './src/screens/PictureFeed/PictureFeedScreen';
+import { ViewComponent } from 'react-native';
 if (!global.btoa) { global.btoa = encode }
 if (!global.atob) { global.atob = decode }
 
@@ -16,12 +19,6 @@ export default function App() {
   const [user, setUser] = useState(null)
 
 
-  // if (loading) {
-  //   console.log('in loading block<<<')
-  //   return (
-  //     <></>
-  //   )
-  // }
 
   useEffect(() => {
     setLoading(true)
@@ -32,7 +29,6 @@ export default function App() {
           .doc(user.uid)
           .get()
           .then((document) => {
-            console.log('got data<<<<')
             const userData = document.data()
             setLoading(false)
             setUser(userData)
@@ -50,18 +46,24 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator>
         {user ? (
-          <Stack.Screen name="Home">
-            {props => <HomeScreen {...props} extraData={user} />}
-          </Stack.Screen>
+          <>
+            <Stack.Screen name="Home">
+              {props => <HomeScreen {...props} extraData={user} setUser={setUser} />}
+            </Stack.Screen>
+            <Stack.Screen name="Pictures" >
+              {props => <PictureFeedScreen {...props} />}
+            </Stack.Screen>
+          </>
         ) : (
           <>
             <Stack.Screen name="Login" >
-              {(props) => <LoginScreen {...props} setUser={setUser} />}
+              {(props) => <LoginScreen {...props} setUser={setUser} user={user} />}
             </Stack.Screen>
             <Stack.Screen name="Registration" component={RegistrationScreen} />
           </>
         )}
       </Stack.Navigator>
+
     </NavigationContainer>
   );
 }

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { FlatList, Keyboard, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { FlatList, Keyboard, Text, TextInput, TouchableOpacity, View, Button } from 'react-native'
 import styles from './styles';
 import { firebase } from '../../firebase/config'
 
@@ -10,6 +10,17 @@ export default function HomeScreen(props) {
 
     const entityRef = firebase.firestore().collection('entities')
     const userID = props.extraData.id
+    const setUser = props.setUser
+    const navigation = props.navigation
+
+    let user = firebase.auth().currentUser;
+
+    if (user) {
+        console.log(user)
+    } else {
+        console.log('no user')
+    }
+
 
     useEffect(() => {
         entityRef
@@ -52,6 +63,10 @@ export default function HomeScreen(props) {
         }
     }
 
+    const handleOnFeedPress = () => {
+        navigation.navigate("Pictures")
+    }
+
     const renderEntity = ({ item, index }) => {
         return (
             <View style={styles.entityContainer}>
@@ -60,6 +75,18 @@ export default function HomeScreen(props) {
                 </Text>
             </View>
         )
+    }
+
+    const handleOnSignOut = () => {
+        firebase
+            .auth()
+            .signOut()
+            .then((response) => {
+                setUser(null)
+            })
+            .catch((err) => {
+                console.log(err)
+            })
     }
 
     return (
@@ -77,6 +104,9 @@ export default function HomeScreen(props) {
                 <TouchableOpacity style={styles.button} onPress={onAddButtonPress}>
                     <Text style={styles.buttonText}>Add</Text>
                 </TouchableOpacity>
+                <TouchableOpacity style={styles.button} onPress={handleOnSignOut}>
+                    <Text style={styles.buttonText}>Log Out</Text>
+                </TouchableOpacity>
             </View>
             {entities && (
                 <View style={styles.listContainer}>
@@ -88,6 +118,9 @@ export default function HomeScreen(props) {
                     />
                 </View>
             )}
+
+            <View><Button title="Feed" onPress={handleOnFeedPress}></Button></View>
+
         </View>
     )
 }
