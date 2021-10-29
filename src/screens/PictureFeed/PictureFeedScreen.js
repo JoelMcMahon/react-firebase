@@ -1,12 +1,13 @@
 
 
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native';
 import { Camera } from 'expo-camera';
 
 export default function App() {
     const [hasPermission, setHasPermission] = useState(null);
     const [camera, setCamera] = useState(null);
+    const [image, setImage] = useState(null)
     const [type, setType] = useState(Camera.Constants.Type.back);
 
     useEffect(() => {
@@ -26,12 +27,18 @@ export default function App() {
 
     const handleTakePicturePress = () => {
         if (camera) {
-            Camera.takePictureAsync(null)
+            camera.takePictureAsync(null)
                 .then((response) => {
-                    console.log(response)
+                    console.log(response.uri)
+                    setImage(response.uri)
+                    console.log(image)
+                })
+                .catch((err) => {
+                    console.log(err)
                 })
         }
     }
+
 
 
     return (
@@ -59,6 +66,7 @@ export default function App() {
                     <Text style={styles.text}>Take Picture</Text>
                 </TouchableOpacity>
             </View>
+            {image && <Image source={{ uri: image }} style={styles.cameraContainer} />}
         </View >
     );
 }
@@ -67,7 +75,6 @@ const styles = StyleSheet.create({
     cameraContainer: {
         flex: 1,
         flexDirection: 'column',
-        alignItems: 'center'
 
     },
     fixedRatio: {
@@ -77,9 +84,9 @@ const styles = StyleSheet.create({
     button: {
 
         height: 47,
-        borderRadius: 500,
+
         backgroundColor: '#788eec',
-        width: 80,
+        width: '100%',
         alignItems: "center",
         justifyContent: 'center'
     },
@@ -87,8 +94,8 @@ const styles = StyleSheet.create({
         color: 'white',
         fontSize: 16
     },
-    buttonContainer: {
-        display: 'flex',
-        flexDirection: 'row'
-    }
+    // buttonContainer: {
+    //     display: 'flex',
+    //     flexDirection: 'row'
+    // }
 });

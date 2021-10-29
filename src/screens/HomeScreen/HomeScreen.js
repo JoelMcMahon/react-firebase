@@ -13,13 +13,8 @@ export default function HomeScreen(props) {
     const setUser = props.setUser
     const navigation = props.navigation
 
-    let user = firebase.auth().currentUser;
 
-    if (user) {
-        console.log(user)
-    } else {
-        console.log('no user')
-    }
+
 
 
     useEffect(() => {
@@ -35,7 +30,7 @@ export default function HomeScreen(props) {
                         newEntities.push(entity)
                     });
                     setEntities(newEntities)
-                    console.log(entities)
+
                 },
                 error => {
                     console.log(error)
