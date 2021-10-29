@@ -8,24 +8,46 @@ import {
   Button,
 } from "react-native";
 import { Camera } from "expo-camera";
+import * as ImagePicker from 'expo-image-picker';
 
 export default function App() {
-  const [hasPermission, setHasPermission] = useState(null);
+  const [hasCameraPermission, setHasCameraPermission] = useState(null);
+  const [hasGalleryPermission, setHasGalleryPermission] = useState(null);
   const [camera, setCamera] = useState(null);
   const [image, setImage] = useState(null);
   const [type, setType] = useState(Camera.Constants.Type.back);
 
   useEffect(() => {
     (async () => {
-      const { status } = await Camera.requestCameraPermissionsAsync();
-      setHasPermission(status === "granted");
+      const cameraStatus = await Camera.requestCameraPermissionsAsync();
+      setHasCameraPermission(cameraStatus.status === "granted");
+
+      const galleryStatus = await Image.Picker.requestCameraRollPermissionsAsync()
+      setHasGalleryPermission(galleryStatus.status === "granted")
+      
     })();
   }, []);
 
-  if (hasPermission === null) {
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 1,
+    });
+
+    console.log(result);
+
+    if (!result.cancelled) {
+      setImage(result.uri);
+    }
+  };
+
+
+  if (hasCameraPermission === null || hasGalleryPermission === false) {
     return <View />;
   }
-  if (hasPermission === false) {
+  if (hasCameraPermission === false || hasGalleryPermission === false) {
     return <Text>No access to camera</Text>;
   }
 
@@ -43,6 +65,8 @@ export default function App() {
         });
     }
   };
+
+  
 
   return (
     <View style={{ flex: 1 }}>
@@ -66,6 +90,7 @@ export default function App() {
         }}
       ></Button>
       <Button title="Take Picture" onPress={handleTakePicturePress}></Button>
+      <Button title="Add Photo From Gallery" onPress={pickImage}></Button>
 
       {image && <Image source={{ uri: image }} style={styles.savedImage} />}
     </View>
