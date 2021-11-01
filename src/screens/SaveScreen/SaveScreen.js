@@ -15,7 +15,13 @@ const SaveScreen = (props) => {
     const uri = image;
     const response = await fetch(uri);
     const blob = await response.blob();
-    console.log(blob);
+
+    const task = firebase
+      .storage()
+      .ref()
+      .child(`/users/${firebase.auth().currentUser.uid}/${Date.now()}`)
+      .put(blob);
+    console.log(firebase.auth().currentUser);
   };
 
   console.log(image);
