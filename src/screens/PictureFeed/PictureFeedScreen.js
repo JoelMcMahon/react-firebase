@@ -9,26 +9,18 @@ import {
 } from "react-native";
 import { Camera } from "expo-camera";
 import * as ImagePicker from "expo-image-picker";
+import { cameraPermissions } from "../../hooks/CameraPermissions";
 
 export default function MediaPicker({ navigation }) {
-  const [hasCameraPermission, setHasCameraPermission] = useState(null);
-  const [hasGalleryPermission, setHasGalleryPermission] = useState(null);
-  const [camera, setCamera] = useState(null);
-  const [image, setImage] = useState(null);
-  const [type, setType] = useState(Camera.Constants.Type.back);
-  const [pictureTaken, setPictureTaken] = useState(null);
-
-  useEffect(() => {
-    (async () => {
-      const cameraStatus = await Camera.requestCameraPermissionsAsync();
-      setHasCameraPermission(cameraStatus.status === "granted");
-
-      // const galleryStatus =
-      //   await Image.Picker.requestMediaLibraryPermissionsAsync();
-      // setHasGalleryPermission(galleryStatus.status === "granted");
-      // console.log(galleryStatus);
-    })();
-  }, []);
+  const {
+    hasCameraPermission,
+    setCamera,
+    image,
+    setImage,
+    type,
+    setType,
+    handleTakePicturePress,
+  } = cameraPermissions();
 
   const pickMedia = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -43,24 +35,15 @@ export default function MediaPicker({ navigation }) {
     }
   };
 
-  if (hasCameraPermission === null || hasGalleryPermission === false) {
+  if (hasCameraPermission === null) {
     return <View />;
   }
-  if (hasCameraPermission === false || hasGalleryPermission === false) {
+  if (hasCameraPermission === false) {
     return <Text>No access to camera</Text>;
   }
 
-  const handleTakePicturePress = () => {
-    if (camera) {
-      camera
-        .takePictureAsync(null)
-        .then((response) => {
-          setImage(response.uri);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }
+  const takeVideoPress = () => {
+    navigation.navigate("VideoScreen");
   };
 
   const saveImage = () => {
@@ -95,6 +78,7 @@ export default function MediaPicker({ navigation }) {
         }}
       ></Button>
       <Button title="Take Picture" onPress={handleTakePicturePress}></Button>
+      <Button title="Take a Video" onPress={takeVideoPress}></Button>
       <Button title="Add Photo From Gallery" onPress={pickMedia}></Button>
     </View>
   );
