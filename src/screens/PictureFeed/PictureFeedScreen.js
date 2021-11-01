@@ -10,7 +10,7 @@ import {
 import { Camera } from "expo-camera";
 import * as ImagePicker from "expo-image-picker";
 
-export default function MediaPicker() {
+export default function MediaPicker({ navigation }) {
   const [hasCameraPermission, setHasCameraPermission] = useState(null);
   const [hasGalleryPermission, setHasGalleryPermission] = useState(null);
   const [camera, setCamera] = useState(null);
@@ -22,17 +22,17 @@ export default function MediaPicker() {
     (async () => {
       const cameraStatus = await Camera.requestCameraPermissionsAsync();
       setHasCameraPermission(cameraStatus.status === "granted");
-      console.log(cameraStatus);
-      const galleryStatus =
-        await Image.Picker.requestMediaLibraryPermissionsAsync();
-      setHasGalleryPermission(galleryStatus.status === "granted");
-      console.log(galleryStatus);
+      console.log(props);
+      // const galleryStatus =
+      //   await Image.Picker.requestMediaLibraryPermissionsAsync();
+      // setHasGalleryPermission(galleryStatus.status === "granted");
+      // console.log(galleryStatus);
     })();
   }, []);
 
   const pickMedia = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Videos,
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [1, 1],
       quality: 1,
@@ -67,19 +67,27 @@ export default function MediaPicker() {
     }
   };
 
+  const saveImage = () => {
+    navigation.navigate("SaveScreen", { image });
+  };
+
   return (
     <View style={{ flex: 1 }}>
-      {image && <Image source={{ uri: image }} style={styles.savedImage} />}
-
-      <View style={styles.cameraContainer}>
-        <Camera
-          style={styles.fixedRatio}
-          type={type}
-          ratio={"1:1"}
-          ref={(ref) => setCamera(ref)}
-        />
-      </View>
-
+      {image ? (
+        <>
+          <Image source={{ uri: image }} style={styles.savedImage} />
+          <Button title="Save" onPress={saveImage} />
+        </>
+      ) : (
+        <View style={styles.cameraContainer}>
+          <Camera
+            style={styles.fixedRatio}
+            type={type}
+            ratio={"1:1"}
+            ref={(ref) => setCamera(ref)}
+          />
+        </View>
+      )}
       <Button
         title={"Flip"}
         onPress={() => {
