@@ -16,9 +16,8 @@ const VideoScreen = () => {
     image,
   } = cameraPermissions();
 
-  return (
-    <>
-      {image ? (
+  const video = () => {
+    return (
       <View>
         <Video
           ref={video}
@@ -30,35 +29,39 @@ const VideoScreen = () => {
           onPlaybackStatusUpdate={(status) => setStatus(() => status)}
         />
       </View>
-      )
-      : (
-          <>
-      <View style={styles.cameraContainer}>
-        <Camera
-          style={styles.fixedRatio}
-          type={type}
-          ratio={"1:1"}
-          ref={(ref) => setCamera(ref)}
-        />
-      </View>
-      <Button
-        title={"Flip"}
-        onPress={() => {
-          setType(
-            type === Camera.Constants.Type.back
-              ? Camera.Constants.Type.front
-              : Camera.Constants.Type.back
-          );
-        }}
-      ></Button>
-      <Button
-        title={isRecording ? "Stop Recording" : "Take Video"}
-        onPress={handleTakeVideoPress}
-      ></Button>
+    );
+  };
+
+  const takeVideo = () => {
+    return (
+      <>
+        <View style={styles.cameraContainer}>
+          <Camera
+            style={styles.fixedRatio}
+            type={type}
+            ratio={"1:1"}
+            ref={(ref) => setCamera(ref)}
+          />
+        </View>
+        <Button
+          title={"Flip"}
+          onPress={() => {
+            setType(
+              type === Camera.Constants.Type.back
+                ? Camera.Constants.Type.front
+                : Camera.Constants.Type.back
+            );
+          }}
+        ></Button>
+        <Button
+          title={isRecording ? "Stop Recording" : "Take Video"}
+          onPress={handleTakeVideoPress}
+        ></Button>
       </>
-      )
-      </>
-  );
+    );
+  };
+
+  return image ? video() : takeVideo();
 };
 
 export default VideoScreen;
