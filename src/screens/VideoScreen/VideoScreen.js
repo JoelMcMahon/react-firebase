@@ -16,9 +16,9 @@ const VideoScreen = () => {
     image,
   } = cameraPermissions();
 
-  const video = () => {
+  const showVideo = () => {
     return (
-      <View>
+      <View style={styles.cameraContainer}>
         <Video
           ref={video}
           style={styles.video}
@@ -26,7 +26,7 @@ const VideoScreen = () => {
           useNativeControls
           resizeMode="contain"
           isLooping
-          onPlaybackStatusUpdate={(status) => setStatus(() => status)}
+          // onPlaybackStatusUpdate={(status) => setStatus(() => status)}
         />
       </View>
     );
@@ -61,15 +61,22 @@ const VideoScreen = () => {
     );
   };
 
-  return image ? video() : takeVideo();
+  return image ? showVideo() : takeVideo();
 };
 
 export default VideoScreen;
 
 const styles = StyleSheet.create({
+  video: {
+    flex: 1,
+    height: 300,
+    width: 300,
+  },
   cameraContainer: {
     flex: 1,
     flexDirection: "row",
+    height: "100%",
+    width: "100%",
   },
   fixedRatio: {
     flex: 1,
