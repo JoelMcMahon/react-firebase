@@ -4,9 +4,9 @@ import { NavigationContainer, useNavigation } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { LoginScreen, HomeScreen, RegistrationScreen } from "./src/screens";
 import { decode, encode } from "base-64";
-import { firebase } from "./src/firebase/config";
 import PictureFeedScreen from "./src/screens/PictureFeed/PictureFeedScreen";
 import Auth from "./src/hooks/auth";
+
 if (!global.btoa) {
   global.btoa = encode;
 }

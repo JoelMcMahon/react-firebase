@@ -8,29 +8,31 @@ import {
   Button,
 } from "react-native";
 import { Camera } from "expo-camera";
-import * as ImagePicker from 'expo-image-picker';
+import * as ImagePicker from "expo-image-picker";
 
-export default function App() {
+export default function MediaPicker() {
   const [hasCameraPermission, setHasCameraPermission] = useState(null);
   const [hasGalleryPermission, setHasGalleryPermission] = useState(null);
   const [camera, setCamera] = useState(null);
   const [image, setImage] = useState(null);
   const [type, setType] = useState(Camera.Constants.Type.back);
+  const [pictureTaken, setPictureTaken] = useState(null);
 
   useEffect(() => {
     (async () => {
       const cameraStatus = await Camera.requestCameraPermissionsAsync();
       setHasCameraPermission(cameraStatus.status === "granted");
-
-      const galleryStatus = await Image.Picker.requestCameraRollPermissionsAsync()
-      setHasGalleryPermission(galleryStatus.status === "granted")
-      
+      console.log(cameraStatus);
+      const galleryStatus =
+        await Image.Picker.requestMediaLibraryPermissionsAsync();
+      setHasGalleryPermission(galleryStatus.status === "granted");
+      console.log(galleryStatus);
     })();
   }, []);
 
-  const pickImage = async () => {
+  const pickMedia = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      mediaTypes: ImagePicker.MediaTypeOptions.Videos,
       allowsEditing: true,
       aspect: [1, 1],
       quality: 1,
@@ -42,7 +44,6 @@ export default function App() {
       setImage(result.uri);
     }
   };
-
 
   if (hasCameraPermission === null || hasGalleryPermission === false) {
     return <View />;
@@ -66,10 +67,10 @@ export default function App() {
     }
   };
 
-  
-
   return (
     <View style={{ flex: 1 }}>
+      {image && <Image source={{ uri: image }} style={styles.savedImage} />}
+
       <View style={styles.cameraContainer}>
         <Camera
           style={styles.fixedRatio}
@@ -90,9 +91,7 @@ export default function App() {
         }}
       ></Button>
       <Button title="Take Picture" onPress={handleTakePicturePress}></Button>
-      <Button title="Add Photo From Gallery" onPress={pickImage}></Button>
-
-      {image && <Image source={{ uri: image }} style={styles.savedImage} />}
+      <Button title="Add Photo From Gallery" onPress={pickMedia}></Button>
     </View>
   );
 }
