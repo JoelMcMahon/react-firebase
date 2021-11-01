@@ -6,6 +6,7 @@ export const cameraPermissions = () => {
   const [camera, setCamera] = useState(null);
   const [image, setImage] = useState(null);
   const [type, setType] = useState(Camera.Constants.Type.back);
+  const [isRecording, setIsRecording] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -27,6 +28,18 @@ export const cameraPermissions = () => {
     }
   };
 
+  const handleTakeVideoPress = () => {
+    if (!isRecording) {
+      setIsRecording(true);
+      camera.recordAsync().then((res) => {
+        setImage(res.uri);
+      });
+    } else {
+      setIsRecording(false);
+      camera.stopRecording();
+    }
+  };
+
   return {
     hasCameraPermission,
     setCamera,
@@ -35,5 +48,7 @@ export const cameraPermissions = () => {
     type,
     setType,
     handleTakePicturePress,
+    handleTakeVideoPress,
+    isRecording,
   };
 };

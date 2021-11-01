@@ -2,20 +2,37 @@ import React, { useState } from "react";
 import { Button, StyleSheet, Text, View } from "react-native";
 import { Camera } from "expo-camera";
 import { cameraPermissions } from "../../hooks/CameraPermissions";
+import { Video } from "expo-av";
 
 const VideoScreen = () => {
-  const { type, setType, setCamera } = cameraPermissions();
-  const [isRecording, setIsRecording] = useState(null);
-
-  const handleTakeVideoPress = () => {
-    setIsRecording(!isRecording);
-    if (isRecording) {
-      Camera.recordAsync();
-    }
-  };
+  const video = React.useRef(null);
+  const {
+    type,
+    setType,
+    setCamera,
+    camera,
+    handleTakeVideoPress,
+    isRecording,
+    image,
+  } = cameraPermissions();
 
   return (
     <>
+      {image ? (
+      <View>
+        <Video
+          ref={video}
+          style={styles.video}
+          source={{ uri: image }}
+          useNativeControls
+          resizeMode="contain"
+          isLooping
+          onPlaybackStatusUpdate={(status) => setStatus(() => status)}
+        />
+      </View>
+      )
+      : (
+          <>
       <View style={styles.cameraContainer}>
         <Camera
           style={styles.fixedRatio}
@@ -34,12 +51,13 @@ const VideoScreen = () => {
           );
         }}
       ></Button>
-
       <Button
         title={isRecording ? "Stop Recording" : "Take Video"}
         onPress={handleTakeVideoPress}
       ></Button>
-    </>
+      </>
+      )
+      </>
   );
 };
 
