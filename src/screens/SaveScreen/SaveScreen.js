@@ -1,11 +1,31 @@
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, TextInput, Image, Button } from "react-native";
+import firebase from "firebase";
+require("firebase/firestore");
+require("firebase/firebase-storage");
 
 const SaveScreen = (props) => {
-  console.log(props, "<<<<<");
+  const {
+    route: {
+      params: { image },
+    },
+  } = props;
+
+  const uploadImage = async () => {
+    const uri = image;
+    const response = await fetch(uri);
+    const blob = await response.blob();
+    console.log(blob);
+  };
+
+  console.log(image);
   return (
-    <View>
-      <Text></Text>
+    <View style={{ flex: 1, height: 300, width: "100%" }}>
+      <Image
+        source={{ uri: image }}
+        style={{ flex: 1, height: 300, width: "100%" }}
+      />
+      <Button title="Save" onPress={uploadImage}></Button>
     </View>
   );
 };

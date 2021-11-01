@@ -22,7 +22,7 @@ export default function MediaPicker({ navigation }) {
     (async () => {
       const cameraStatus = await Camera.requestCameraPermissionsAsync();
       setHasCameraPermission(cameraStatus.status === "granted");
-      console.log(props);
+
       // const galleryStatus =
       //   await Image.Picker.requestMediaLibraryPermissionsAsync();
       // setHasGalleryPermission(galleryStatus.status === "granted");
@@ -37,8 +37,6 @@ export default function MediaPicker({ navigation }) {
       aspect: [1, 1],
       quality: 1,
     });
-
-    console.log(result);
 
     if (!result.cancelled) {
       setImage(result.uri);
@@ -57,9 +55,7 @@ export default function MediaPicker({ navigation }) {
       camera
         .takePictureAsync(null)
         .then((response) => {
-          console.log(response.uri);
           setImage(response.uri);
-          console.log(image);
         })
         .catch((err) => {
           console.log(err);
