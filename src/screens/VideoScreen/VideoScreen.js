@@ -17,12 +17,14 @@ const VideoScreen = () => {
     image,
   } = cameraPermissions();
 
+  const [loading, setLoading] = useState(false);
+
   const takeVideo = () => {
     return (
       <>
         <View style={styles.cameraContainer}>
           <Camera
-            style={styles.fixedRatio}
+            style={styles.video}
             type={type}
             ratio={"1:1"}
             ref={(ref) => setCamera(ref)}
@@ -55,12 +57,13 @@ const VideoScreen = () => {
           source={{ uri: image }}
           useNativeControls
           isLooping
+          // resizeMode="contain"
           // onPlaybackStatusUpdate={(status) => setStatus(() => status)}
         />
         <Button
-          title="upload image"
+          title={loading ? "Uploading video..." : "Upload video"}
           onPress={() => {
-            uploadVideo(image);
+            uploadVideo(image, setLoading);
           }}
         ></Button>
       </View>
@@ -76,6 +79,8 @@ const styles = StyleSheet.create({
   video: {
     flex: 1,
     backgroundColor: "black",
+    height: "100%",
+    width: "100%",
   },
 
   cameraContainer: {

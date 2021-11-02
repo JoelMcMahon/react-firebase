@@ -11,6 +11,7 @@ export const cameraPermissions = () => {
 
   useEffect(() => {
     (async () => {
+      console.log("camera perms");
       const cameraStatus = await Camera.requestCameraPermissionsAsync();
       setHasCameraPermission(cameraStatus.status === "granted");
       await Audio.requestPermissionsAsync();

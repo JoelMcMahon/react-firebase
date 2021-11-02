@@ -26,14 +26,18 @@ export const uploadImage = async (image, setLoading) => {
   setLoading(false);
 };
 
-export const uploadVideo = async (video) => {
+export const uploadVideo = async (video, setLoading) => {
   const uri = video;
   const response = await fetch(uri);
   const blob = await response.blob();
 
+  console.log(uri);
+
   const videoRef = `/users/${
     firebase.auth().currentUser.uid
   }/videos/${Date.now()}`;
+
+  setLoading(true);
 
   await firebase.storage().ref().child(videoRef).put(blob);
 
@@ -44,4 +48,6 @@ export const uploadVideo = async (video) => {
     .then((res) => {
       console.log(res);
     });
+
+  setLoading(false);
 };
