@@ -19,7 +19,7 @@ if (!global.atob) {
 const Stack = createStackNavigator();
 
 export default function App() {
-  const { user, setUser, loading } = Auth();
+  const { user, setUser } = Auth();
 
   return (
     <NavigationContainer>
@@ -33,9 +33,6 @@ export default function App() {
             </Stack.Screen>
             <Stack.Screen name="Pictures">
               {(props) => <PictureFeedScreen {...props} />}
-            </Stack.Screen>
-            <Stack.Screen name="SaveScreen">
-              {(props) => <SaveScreen {...props} />}
             </Stack.Screen>
             <Stack.Screen name="VideoScreen">
               {(props) => <VideoScreen {...props} />}

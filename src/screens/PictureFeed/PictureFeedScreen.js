@@ -1,17 +1,11 @@
-import React, { useState, useEffect } from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-  Image,
-  Button,
-} from "react-native";
+import React, { useState } from "react";
+import { StyleSheet, Text, View, Image, Button } from "react-native";
 import { Camera } from "expo-camera";
 import * as ImagePicker from "expo-image-picker";
 import { cameraPermissions } from "../../hooks/CameraPermissions";
+import { uploadItem } from "../../utils/dbinteract";
 
-export default function MediaPicker({ navigation }) {
+export default function MediaPicker() {
   const {
     hasCameraPermission,
     setCamera,
@@ -21,6 +15,8 @@ export default function MediaPicker({ navigation }) {
     setType,
     handleTakePicturePress,
   } = cameraPermissions();
+
+  const [loading, setLoading] = useState(false);
 
   const pickMedia = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -42,45 +38,49 @@ export default function MediaPicker({ navigation }) {
     return <Text>No access to camera</Text>;
   }
 
-  const takeVideoPress = () => {
-    navigation.navigate("VideoScreen");
-  };
-
-  const saveImage = () => {
-    navigation.navigate("SaveScreen", { image });
-  };
-
-  return (
-    <View style={{ flex: 1 }}>
-      {image ? (
-        <>
-          <Image source={{ uri: image }} style={styles.savedImage} />
-          <Button title="Save" onPress={saveImage} />
-        </>
-      ) : (
+  const takePicture = () => {
+    return (
+      <>
         <View style={styles.cameraContainer}>
           <Camera
-            style={styles.fixedRatio}
+            style={styles.savedImage}
             type={type}
             ratio={"1:1"}
             ref={(ref) => setCamera(ref)}
           />
         </View>
-      )}
-      <Button
-        title={"Flip"}
-        onPress={() => {
-          setType(
-            type === Camera.Constants.Type.back
-              ? Camera.Constants.Type.front
-              : Camera.Constants.Type.back
-          );
-        }}
-      ></Button>
-      <Button title="Take Picture" onPress={handleTakePicturePress}></Button>
-      <Button title="Take a Video" onPress={takeVideoPress}></Button>
-      <Button title="Add Photo From Gallery" onPress={pickMedia}></Button>
-    </View>
+        <Button
+          title={"Flip"}
+          onPress={() => {
+            setType(
+              type === Camera.Constants.Type.back
+                ? Camera.Constants.Type.front
+                : Camera.Constants.Type.back
+            );
+          }}
+        ></Button>
+        <Button title="Take Picture" onPress={handleTakePicturePress}></Button>
+        <Button title="Add Photo From Gallery" onPress={pickMedia}></Button>
+      </>
+    );
+  };
+
+  const savePicture = () => {
+    return (
+      <>
+        <Image source={{ uri: image }} style={styles.savedImage} />
+        <Button
+          title={loading ? "Uploading image.." : "Upload image"}
+          onPress={() => {
+            uploadItem("images", image, setLoading, setImage);
+          }}
+        />
+      </>
+    );
+  };
+
+  return (
+    <View style={{ flex: 1 }}>{image ? savePicture() : takePicture()}</View>
   );
 }
 

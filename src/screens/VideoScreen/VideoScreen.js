@@ -3,7 +3,7 @@ import { Button, StyleSheet, Text, View } from "react-native";
 import { Camera } from "expo-camera";
 import { cameraPermissions } from "../../hooks/CameraPermissions";
 import { Video } from "expo-av";
-import { uploadVideo } from "../../utils/dbinteract";
+import { uploadItem } from "../../utils/dbinteract";
 
 const VideoScreen = () => {
   const video = React.useRef(null);
@@ -11,10 +11,10 @@ const VideoScreen = () => {
     type,
     setType,
     setCamera,
-    camera,
     handleTakeVideoPress,
     isRecording,
     image,
+    setImage,
   } = cameraPermissions();
 
   const [loading, setLoading] = useState(false);
@@ -63,7 +63,7 @@ const VideoScreen = () => {
         <Button
           title={loading ? "Uploading video..." : "Upload video"}
           onPress={() => {
-            uploadVideo(image, setLoading);
+            uploadItem("videos", image, setLoading, setImage);
           }}
         ></Button>
       </View>
