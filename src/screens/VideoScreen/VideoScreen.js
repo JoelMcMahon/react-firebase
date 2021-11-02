@@ -3,6 +3,7 @@ import { Button, StyleSheet, Text, View } from "react-native";
 import { Camera } from "expo-camera";
 import { cameraPermissions } from "../../hooks/CameraPermissions";
 import { Video } from "expo-av";
+import { uploadVideo } from "../../utils/dbinteract";
 
 const VideoScreen = () => {
   const video = React.useRef(null);
@@ -15,22 +16,6 @@ const VideoScreen = () => {
     isRecording,
     image,
   } = cameraPermissions();
-
-  const showVideo = () => {
-    return (
-      <View style={styles.cameraContainer}>
-        <Video
-          ref={video}
-          style={styles.video}
-          source={{ uri: image }}
-          useNativeControls
-          resizeMode="contain"
-          isLooping
-          // onPlaybackStatusUpdate={(status) => setStatus(() => status)}
-        />
-      </View>
-    );
-  };
 
   const takeVideo = () => {
     return (
@@ -61,6 +46,27 @@ const VideoScreen = () => {
     );
   };
 
+  const showVideo = () => {
+    return (
+      <View style={styles.cameraContainer}>
+        <Video
+          ref={video}
+          style={styles.video}
+          source={{ uri: image }}
+          useNativeControls
+          isLooping
+          // onPlaybackStatusUpdate={(status) => setStatus(() => status)}
+        />
+        <Button
+          title="upload image"
+          onPress={() => {
+            uploadVideo(image);
+          }}
+        ></Button>
+      </View>
+    );
+  };
+
   return image ? showVideo() : takeVideo();
 };
 
@@ -69,17 +75,13 @@ export default VideoScreen;
 const styles = StyleSheet.create({
   video: {
     flex: 1,
-    height: 300,
-    width: 300,
+    backgroundColor: "black",
   },
+
   cameraContainer: {
     flex: 1,
-    flexDirection: "row",
+    flexDirection: "column",
     height: "100%",
     width: "100%",
-  },
-  fixedRatio: {
-    flex: 1,
-    aspectRatio: 1,
   },
 });
