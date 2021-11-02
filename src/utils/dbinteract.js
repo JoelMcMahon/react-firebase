@@ -15,7 +15,7 @@ export const uploadItem = async (endpoint, item, setLoading, setItem) => {
   setLoading(true);
 
   await firebase.storage().ref().child(location).put(blob, metadata);
-
+  console.log(firebase.firestore.FieldValue.serverTimestamp());
   await db
     .collection(endpoint)
     .doc(firebase.auth().currentUser.uid)
