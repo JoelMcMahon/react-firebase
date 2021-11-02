@@ -26,7 +26,7 @@ const VideoScreen = () => {
           <Camera
             style={styles.video}
             type={type}
-            ratio={"1:1"}
+            // ratio={"1:1"}
             ref={(ref) => setCamera(ref)}
           />
         </View>

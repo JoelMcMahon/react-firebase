@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Camera } from "expo-camera";
 import { Audio } from "expo-av";
 
@@ -11,7 +11,6 @@ export const cameraPermissions = () => {
 
   useEffect(() => {
     (async () => {
-      console.log("camera perms");
       const cameraStatus = await Camera.requestCameraPermissionsAsync();
       setHasCameraPermission(cameraStatus.status === "granted");
       await Audio.requestPermissionsAsync();
