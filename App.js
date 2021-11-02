@@ -19,31 +19,6 @@ if (!global.atob) {
 const Stack = createStackNavigator();
 
 export default function App() {
-  // const [loading, setLoading] = useState(false);
-  // const [user, setUser] = useState(null);
-
-  // useEffect(() => {
-  //   setLoading(true);
-  //   const usersRef = firebase.firestore().collection("users");
-  //   firebase.auth().onAuthStateChanged((user) => {
-  //     if (user) {
-  //       usersRef
-  //         .doc(user.uid)
-  //         .get()
-  //         .then((document) => {
-  //           const userData = document.data();
-  //           setLoading(false);
-  //           setUser(userData);
-  //         })
-  //         .catch((error) => {
-  //           setLoading(false);
-  //         });
-  //     } else {
-  //       setLoading(false);
-  //     }
-  //   });
-  // }, []);
-
   const { user, setUser, loading } = Auth();
 
   return (

@@ -1,41 +1,28 @@
 import React from "react";
-import { StyleSheet, Text, View, TextInput, Image, Button } from "react-native";
-import firebase from "firebase";
-require("firebase/firestore");
-require("firebase/firebase-storage");
+import { useState } from "react";
+import { View, Text, Image, Button } from "react-native";
+import { uploadImage } from "../../utils/dbinteract";
 
-const SaveScreen = (props) => {
+const SaveScreen = ({ route }) => {
+  const [loading, setLoading] = useState(false);
   const {
-    route: {
-      params: { image },
-    },
-  } = props;
+    params: { image },
+  } = route;
 
-  const uploadImage = async () => {
-    const uri = image;
-    const response = await fetch(uri);
-    const blob = await response.blob();
-
-    const task = firebase
-      .storage()
-      .ref()
-      .child(`/users/${firebase.auth().currentUser.uid}/${Date.now()}`)
-      .put(blob);
-    console.log(firebase.auth().currentUser);
-  };
-
-  console.log(image);
   return (
     <View style={{ flex: 1, height: 300, width: "100%" }}>
       <Image
         source={{ uri: image }}
         style={{ flex: 1, height: 300, width: "100%" }}
       />
-      <Button title="Save" onPress={uploadImage}></Button>
+      <Button
+        title={loading ? "Uploading.." : "Save photo"}
+        onPress={() => {
+          uploadImage(image, setLoading);
+        }}
+      ></Button>
     </View>
   );
 };
 
 export default SaveScreen;
-
-const styles = StyleSheet.create({});
