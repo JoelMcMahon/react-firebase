@@ -4,7 +4,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { LoginScreen, HomeScreen, RegistrationScreen } from "./src/screens";
 import { decode, encode } from "base-64";
-import PictureFeedScreen from "./src/screens/PictureFeed/PictureFeedScreen";
+import PictureScreen from "./src/screens/PictureScreen/PictureScreen";
 import Auth from "./src/hooks/auth";
 import VideoScreen from "./src/screens/VideoScreen/VideoScreen";
 import FeedScreen from "./src/screens/FeedScreen/FeedScreen";
@@ -32,7 +32,7 @@ export default function App() {
               )}
             </Stack.Screen>
             <Stack.Screen name="Pictures">
-              {(props) => <PictureFeedScreen {...props} />}
+              {(props) => <PictureScreen {...props} />}
             </Stack.Screen>
             <Stack.Screen name="VideoScreen">
               {(props) => <VideoScreen {...props} />}
