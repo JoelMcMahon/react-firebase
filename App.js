@@ -7,6 +7,7 @@ import { decode, encode } from "base-64";
 import PictureFeedScreen from "./src/screens/PictureFeed/PictureFeedScreen";
 import Auth from "./src/hooks/auth";
 import VideoScreen from "./src/screens/VideoScreen/VideoScreen";
+import FeedScreen from "./src/screens/FeedScreen/FeedScreen";
 
 if (!global.btoa) {
   global.btoa = encode;
@@ -35,6 +36,9 @@ export default function App() {
             </Stack.Screen>
             <Stack.Screen name="VideoScreen">
               {(props) => <VideoScreen {...props} />}
+            </Stack.Screen>
+            <Stack.Screen name="FeedScreen">
+              {(props) => <FeedScreen {...props} />}
             </Stack.Screen>
           </>
         ) : (

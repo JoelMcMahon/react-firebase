@@ -32,6 +32,7 @@ export default function HomeScreen({ setUser, navigation }) {
       </View>
       <View style={styles.navCont}>
         {navButton("Pictures")}
+        {navButton("FeedScreen")}
         {navButton("VideoScreen")}
       </View>
     </View>

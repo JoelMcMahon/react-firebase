@@ -10,19 +10,33 @@ export const uploadItem = async (endpoint, item, setLoading, setItem) => {
   const location = `/users/${
     firebase.auth().currentUser.uid
   }/${endpoint}/${Date.now()}`;
-  const metadata = { contentType: "video/mp4", contentDisposition: "" };
 
   setLoading(true);
 
-  await firebase.storage().ref().child(location).put(blob, metadata);
-  console.log(firebase.firestore.FieldValue.serverTimestamp());
+  await firebase.storage().ref().child(location).put(blob);
+
+  const storageRef = firebase.storage().ref(location);
+
+  const downloadURL = await storageRef.getDownloadURL();
+
   await db
-    .collection(endpoint)
+    .collection("users")
     .doc(firebase.auth().currentUser.uid)
-    .set({ location: [location] }, { merge: true })
-    .then((res) => {
-      console.log(res, "<<<<");
+    .collection("posts")
+    .add({
+      created: firebase.firestore.FieldValue.serverTimestamp(),
+      caption: "it's a caption!",
+      download: downloadURL,
     });
+
+  console.log(firebase.auth().currentUser);
+
+  await db.collection("allPosts").add({
+    user: firebase.auth().currentUser.email,
+    created: firebase.firestore.FieldValue.serverTimestamp(),
+    caption: "it's a caption!",
+    download: downloadURL,
+  });
 
   setLoading(false);
   setItem(null);
